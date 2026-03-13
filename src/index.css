@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-poke-bg: #0f172a;
+  --color-poke-card: #1e293b;
+  
+  /* Type colors */
+  --color-type-normal: #A8A77A;
+  --color-type-fire: #EE8130;
+  --color-type-water: #6390F0;
+  --color-type-electric: #F7D02C;
+  --color-type-grass: #7AC74C;
+  --color-type-ice: #96D9D6;
+  --color-type-fighting: #C22E28;
+  --color-type-poison: #A33EA1;
+  --color-type-ground: #E2BF65;
+  --color-type-flying: #A98FF3;
+  --color-type-psychic: #F95587;
+  --color-type-bug: #A6B91A;
+  --color-type-rock: #B6A136;
+  --color-type-ghost: #735797;
+  --color-type-dragon: #6F35FC;
+  --color-type-dark: #705746;
+  --color-type-steel: #B7B7CE;
+  --color-type-fairy: #D685AD;
+}
+
+body {
+  @apply bg-slate-900 text-slate-100 min-h-screen font-sans antialiased;
+  background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+  background-attachment: fixed;
+}
