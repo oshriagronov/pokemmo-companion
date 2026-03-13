@@ -8,7 +8,7 @@ function App() {
       {/* Header */}
       <header className="text-center mb-12">
         <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-4 drop-shadow-lg">
-          PokeMMO Guide
+          PokeMMO Companion
         </h1>
         <p className="text-slate-400 text-lg max-w-2xl mx-auto">
           Your ultimate companion for PokeMMO. Discover type matchups, encounter locations, evolutions, and the best moves for every Pokemon.

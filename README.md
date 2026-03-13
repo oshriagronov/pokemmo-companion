@@ -1,10 +1,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/oshriagronov/pokemmo-guide">
-    <img src="public/screenshots/search.png" alt="Logo" width="200" height="200" style="object-fit: cover; border-radius: 10px;">
+    <img src="./public/logo.png" alt="Logo" width="200" height="200" style="object-fit: cover; border-radius: 10px;">
   </a>
 
-<h3 align="center">PokeMMO Guide</h3>
+<h3 align="center">PokeMMO Companion</h3>
   <p align="center">
     Your ultimate companion for PokeMMO. Discover type matchups, encounter locations, evolutions, and the best moves for every Pokemon.
   </p>
@@ -16,8 +16,8 @@ This project showcases an interactive, responsive web application built with Rea
 The design of the site utilizes Tailwind CSS.
 
 ### Screenshots
-![PokeMMO Guide Type Matchups](public/screenshots/matchups.png)
-![PokeMMO Guide Search](public/screenshots/search.png)
+![PokeMMO Companion Type Matchups](public/screenshots/matchups.png)
+![PokeMMO Companion Search](public/screenshots/search.png)
 
 ## Technologies used
 
