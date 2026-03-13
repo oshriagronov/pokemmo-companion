@@ -78,13 +78,13 @@ export default function PokemonSearch() {
           value={query}
           onChange={handleInputChange}
           onFocus={() => { if (filteredNames.length > 0) setShowDropdown(true); }}
-          placeholder="Search by name or Pokedex number (e.g., pikachu, 25)..." 
-          className="w-full bg-slate-900/80 border border-slate-600 rounded-xl px-4 py-3 pr-24 text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
+          placeholder="Search by name or number (e.g., pikachu, 25)..." 
+          className="w-full bg-slate-900/80 border border-slate-600 rounded-xl px-3 md:px-4 py-3 md:py-4 pr-24 text-sm md:text-base text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
         />
         <button 
           type="submit"
           disabled={loading}
-          className="absolute right-2 top-2 px-4 py-1.5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-800 text-white font-medium rounded-lg transition-colors z-20"
+          className="absolute right-2 top-2 bottom-2 px-4 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-800 text-white font-medium rounded-lg transition-colors z-20 text-sm md:text-base"
         >
           {loading ? '...' : 'Search'}
         </button>
@@ -114,23 +114,23 @@ export default function PokemonSearch() {
       {pokemon && (
         <div className="animate-fade-in">
           {/* Header Row: Sprite and Basic Stats */}
-          <div className="flex flex-col md:flex-row gap-6 mb-8">
-            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700 flex justify-center items-center relative overflow-hidden group">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8 text-center md:text-left">
+            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700 flex justify-center items-center relative overflow-hidden group w-full max-w-[240px] md:w-auto">
               <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               {pokemon.sprites.front ? (
-                <img src={pokemon.sprites.front} alt={pokemon.name} className="w-48 h-48 object-contain drop-shadow-2xl z-10 hover:scale-110 transition-transform duration-500" />
+                <img src={pokemon.sprites.front} alt={pokemon.name} className="w-40 h-40 md:w-48 md:h-48 object-contain drop-shadow-2xl z-10 hover:scale-110 transition-transform duration-500" />
               ) : (
-                <div className="w-48 h-48 flex items-center justify-center text-slate-500">No Image</div>
+                <div className="w-40 h-40 md:w-48 md:h-48 flex items-center justify-center text-slate-500">No Image</div>
               )}
             </div>
             
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-3xl font-extrabold text-white">{pokemon.name}</h3>
-                <span className="text-xl font-bold text-slate-500">#{pokemon.id.toString().padStart(3, '0')}</span>
+            <div className="flex-1 w-full">
+              <div className="flex flex-col sm:flex-row items-center sm:justify-between mb-3 md:mb-2 gap-1 sm:gap-0">
+                <h3 className="text-3xl md:text-4xl font-extrabold text-white capitalize">{pokemon.name}</h3>
+                <span className="text-xl md:text-2xl font-bold text-slate-500">#{pokemon.id.toString().padStart(3, '0')}</span>
               </div>
               
-              <div className="flex gap-2 mb-4">
+              <div className="flex justify-center md:justify-start gap-2 mb-6 md:mb-4">
                 {pokemon.types.map(t => (
                   <span key={t} className={`${TYPE_COLORS[t] || 'bg-slate-500'} px-3 py-1 rounded-full text-xs font-bold uppercase text-white shadow-lg`}>
                     {t}
@@ -138,10 +138,10 @@ export default function PokemonSearch() {
                 ))}
               </div>
 
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <div className="grid grid-cols-2 lg:grid-cols-2 gap-x-4 gap-y-2 text-sm w-full mx-auto md:mx-0 max-w-sm md:max-w-none">
                 {pokemon.stats.map(s => (
                   <div key={s.name} className="flex justify-between items-center bg-slate-800/50 p-2 rounded">
-                    <span className="text-slate-400">{s.name.replace('Special', 'Sp.')}</span>
+                    <span className="text-slate-400 capitalize">{s.name.replace('Special', 'Sp.')}</span>
                     <span className="font-bold text-white">{s.value}</span>
                   </div>
                 ))}
@@ -196,10 +196,10 @@ export default function PokemonSearch() {
             <div className="md:col-span-2 space-y-4">
               <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
                 <h4 className="font-bold text-purple-400 mb-3 border-b border-slate-700 pb-2">Notable Late-Game Moves</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {pokemon.bestMoves.map((m, i) => (
                     <div key={i} className="bg-slate-800 p-2 rounded flex flex-col items-center justify-center text-center">
-                      <span className="text-white font-bold text-sm">{m.name}</span>
+                      <span className="text-white font-bold text-sm capitalize">{m.name.replace('-', ' ')}</span>
                       <span className="text-xs text-purple-300 mt-1">Learned at Lv. {m.level}</span>
                     </div>
                   ))}
@@ -209,10 +209,10 @@ export default function PokemonSearch() {
               {pokemon.earlyMoves.length > 0 && (
                 <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
                   <h4 className="font-bold text-blue-400 mb-3 border-b border-slate-700 pb-2">Honorable Mentions (Early/Mid Game)</h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {pokemon.earlyMoves.map((m, i) => (
                       <div key={i} className="bg-slate-800 p-2 rounded flex flex-col items-center justify-center text-center opacity-80 hover:opacity-100 transition-opacity">
-                        <span className="text-white font-bold text-sm">{m.name}</span>
+                        <span className="text-white font-bold text-sm capitalize">{m.name.replace('-', ' ')}</span>
                         <span className="text-xs text-blue-300 mt-1">Learned at Lv. {m.level}</span>
                       </div>
                     ))}

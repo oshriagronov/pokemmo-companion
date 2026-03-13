@@ -1,6 +1,6 @@
 <br />
 <div align="center">
-  <a href="https://github.com/oshriagronov/pokemmo-guide">
+  <a href="https://github.com/oshriagronov/pokemmo-companion">
     <img src="./public/logo.png" alt="Logo" width="200" height="200" style="object-fit: cover; border-radius: 10px;">
   </a>
 
@@ -44,10 +44,10 @@ To get a local copy up and running follow these simple steps.
 
 ---
 
-1. **Clone and enter the pokemmo-guide repository:**
+1. **Clone and enter the pokemmo-companion repository:**
 
    ```bash
-   git clone https://github.com/oshriagronov/pokemmo-guide && cd pokemmo-guide
+   git clone https://github.com/oshriagronov/pokemmo-companion && cd pokemmo-companion
    ```
 
 2. **Install npm modules::**

@@ -26,27 +26,27 @@ export default function TypeMatchup() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <p className="text-slate-400 text-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4 sm:gap-0 mb-6 text-center sm:text-left">
+        <p className="text-slate-400 text-sm max-w-xs">
           Select a type to see its {viewMode === 'defense' ? 'weaknesses and resistances' : 'offensive advantages'}.
         </p>
-        <div className="flex bg-slate-800 rounded-lg p-1 border border-slate-700">
+        <div className="flex bg-slate-800 rounded-lg p-1 border border-slate-700 w-full sm:w-auto justify-center">
           <button 
             onClick={() => setViewMode('defense')}
-            className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${viewMode === 'defense' ? 'bg-blue-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+            className={`flex-1 sm:flex-none px-4 py-1.5 text-xs md:text-sm font-bold rounded-md transition-colors ${viewMode === 'defense' ? 'bg-blue-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
           >
             Defender
           </button>
           <button 
             onClick={() => setViewMode('offense')}
-            className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${viewMode === 'offense' ? 'bg-orange-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+            className={`flex-1 sm:flex-none px-4 py-1.5 text-xs md:text-sm font-bold rounded-md transition-colors ${viewMode === 'offense' ? 'bg-orange-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
           >
             Attacker
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 gap-2 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-2 mb-6">
         {TYPES.map((type) => {
           const matchType = getMatchType(type);
           
@@ -100,36 +100,36 @@ export default function TypeMatchup() {
             <h3 className="text-white font-bold capitalize mb-3 text-center">
               {data.title}
             </h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center">
-                <span className="w-10 text-red-400 font-bold text-right mr-3 whitespace-nowrap">{viewMode === 'defense' ? '-2x' : '2x'}</span>
-                <div className="flex flex-wrap gap-1">
+            <div className="space-y-3 text-sm max-w-sm mx-auto sm:max-w-none">
+              <div className="flex items-start sm:items-center">
+                <span className="w-12 sm:w-16 text-red-400 font-bold text-right mr-3 whitespace-nowrap pt-0.5 sm:pt-0">{viewMode === 'defense' ? '-2x' : '2x'}</span>
+                <div className="flex flex-wrap gap-1.5 flex-1">
                   {data.twoX.length ? 
                     data.twoX.map(t => (
-                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] text-white font-bold uppercase`}>{t}</span>
-                    )) : <span className="text-slate-500 italic">None</span>
+                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] sm:text-xs text-white font-bold uppercase`}>{t}</span>
+                    )) : <span className="text-slate-500 italic mt-0.5 sm:mt-0 pt-0.5 sm:pt-0">None</span>
                   }
                 </div>
               </div>
               
-              <div className="flex items-center">
-                <span className="w-10 text-green-400 font-bold text-right mr-3 whitespace-nowrap">{viewMode === 'defense' ? '-0.5x' : '0.5x'}</span>
-                <div className="flex flex-wrap gap-1">
+              <div className="flex items-start sm:items-center">
+                <span className="w-12 sm:w-16 text-green-400 font-bold text-right mr-3 whitespace-nowrap pt-0.5 sm:pt-0">{viewMode === 'defense' ? '-0.5x' : '0.5x'}</span>
+                <div className="flex flex-wrap gap-1.5 flex-1">
                   {data.halfX.length ? 
                     data.halfX.map(t => (
-                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] text-white font-bold uppercase`}>{t}</span>
-                    )) : <span className="text-slate-500 italic">None</span>
+                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] sm:text-xs text-white font-bold uppercase`}>{t}</span>
+                    )) : <span className="text-slate-500 italic mt-0.5 sm:mt-0 pt-0.5 sm:pt-0">None</span>
                   }
                 </div>
               </div>
 
-              <div className="flex items-center">
-                <span className="w-10 text-slate-400 font-bold text-right mr-3">0x</span>
-                <div className="flex flex-wrap gap-1">
+              <div className="flex items-start sm:items-center">
+                <span className="w-12 sm:w-16 text-slate-400 font-bold text-right mr-3 pt-0.5 sm:pt-0">0x</span>
+                <div className="flex flex-wrap gap-1.5 flex-1">
                   {data.zeroX.length ? 
                     data.zeroX.map(t => (
-                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] text-white font-bold uppercase`}>{t}</span>
-                    )) : <span className="text-slate-500 italic">None</span>
+                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] sm:text-xs text-white font-bold uppercase`}>{t}</span>
+                    )) : <span className="text-slate-500 italic mt-0.5 sm:mt-0 pt-0.5 sm:pt-0">None</span>
                   }
                 </div>
               </div>

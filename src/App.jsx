@@ -4,13 +4,13 @@ import PokemonSearch from './components/PokemonSearch';
 
 function App() {
   return (
-    <div className="min-h-screen container mx-auto px-4 py-8">
+    <div className="min-h-screen container mx-auto px-4 py-6 md:py-8">
       {/* Header */}
-      <header className="text-center mb-12">
-        <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-4 drop-shadow-lg">
+      <header className="text-center mb-8 md:mb-12">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-4 drop-shadow-lg">
           PokeMMO Companion
         </h1>
-        <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+        <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">
           Your ultimate companion for PokeMMO. Discover type matchups, encounter locations, evolutions, and the best moves for every Pokemon.
         </p>
       </header>
@@ -31,7 +31,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-12 text-center text-slate-500 text-sm py-8 border-t border-slate-800/80">
+      <footer className="mt-12 text-center text-slate-500 text-xs md:text-sm py-6 md:py-8 border-t border-slate-800/80">
         <p>
           I would like to thank <a href="https://pokeapi.co/" className="text-blue-400 hover:text-blue-300 font-medium transition-colors" target="_blank" rel="noreferrer">PokeAPI</a> for providing the data. Built with <span className="text-emerald-400 font-bold tracking-wide">Google Antigravity</span> for the PokeMMO community.
         </p>
