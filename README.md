@@ -8,6 +8,12 @@
   <p align="center">
     Your ultimate companion for PokeMMO. Discover type matchups, encounter locations, evolutions, and the best moves for every Pokemon.
   </p>
+
+  <p align="center">
+    <a href="https://github.com/oshriagronov/pokemmo-companion/releases/latest/download/PokeMMO.Companion.apk">
+      <img src="./public/android-download.svg" alt="Download for Android" width="220" />
+    </a>
+  </p>
 </div>
 
 ## About

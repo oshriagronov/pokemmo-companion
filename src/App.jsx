@@ -10,9 +10,15 @@ function App() {
         <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-4 drop-shadow-lg">
           PokeMMO Companion
         </h1>
-        <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">
+        <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-6">
           Your ultimate companion for PokeMMO. Discover type matchups, encounter locations, evolutions, and the best moves for every Pokemon.
         </p>
+        
+        <div className="flex justify-center">
+          <a href="https://github.com/oshriagronov/pokemmo-companion/releases/latest/download/PokeMMO.Companion.apk" className="hover:scale-105 hover:opacity-90 transition-transform block mt-2">
+            <img src="/android-download.svg" alt="Download for Android" className="h-14 sm:h-16 shadow-lg shadow-emerald-500/20 rounded-[0.85rem]" />
+          </a>
+        </div>
       </header>
 
       {/* Main Content Layout */}
