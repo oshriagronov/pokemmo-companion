@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { TYPE_COLORS, TYPE_MATCHUPS, TYPES, getOffensiveMatchups } from '../data/types';
 
 export default function TypeMatchup() {
   const [selectedType, setSelectedType] = useState(null);
   const [viewMode, setViewMode] = useState('defense');
+
+  const offensiveMatchups = useMemo(() => selectedType ? getOffensiveMatchups(selectedType) : null, [selectedType]);
 
   const getMatchType = (type) => {
     if (!selectedType) return null;
@@ -15,7 +17,7 @@ export default function TypeMatchup() {
       if (matchup.resistances.includes(type)) return 'resist'; // 0.5x damage taken
       if (matchup.immunities.includes(type)) return 'immune'; // 0x damage taken
     } else {
-      const matchup = getOffensiveMatchups(selectedType);
+      const matchup = offensiveMatchups;
       if (matchup.superEffective.includes(type)) return 'off_strong'; // 2x damage dealt (use blue)
       if (matchup.notVeryEffective.includes(type)) return 'resist'; // 0.5x damage dealt
       if (matchup.noEffect.includes(type)) return 'immune'; // 0x damage dealt
@@ -90,9 +92,9 @@ export default function TypeMatchup() {
             }
           : {
               title: `${selectedType} Attacks`,
-              twoX: getOffensiveMatchups(selectedType).superEffective,
-              halfX: getOffensiveMatchups(selectedType).notVeryEffective,
-              zeroX: getOffensiveMatchups(selectedType).noEffect
+              twoX: offensiveMatchups.superEffective,
+              halfX: offensiveMatchups.notVeryEffective,
+              zeroX: offensiveMatchups.noEffect
             };
 
         return (
