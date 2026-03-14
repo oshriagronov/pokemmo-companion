@@ -1,8 +1,11 @@
 import React from 'react';
+import { Capacitor } from '@capacitor/core';
 import TypeMatchup from './components/TypeMatchup';
 import PokemonSearch from './components/PokemonSearch';
 
 function App() {
+  const isNative = Capacitor.isNativePlatform();
+
   return (
     <div className="min-h-screen container mx-auto px-4 py-6 md:py-8">
       {/* Header */}
@@ -14,11 +17,13 @@ function App() {
           Your ultimate companion for PokeMMO. Discover type matchups, encounter locations, evolutions, and the best moves for every Pokemon.
         </p>
         
-        <div className="flex justify-center">
-          <a href="https://github.com/oshriagronov/pokemmo-companion/releases/latest/download/PokeMMO.Companion.apk" className="hover:scale-105 hover:opacity-90 transition-transform block mt-2">
-            <img src="/android-download.svg" alt="Download for Android" className="h-14 sm:h-16 shadow-lg shadow-emerald-500/20 rounded-[0.85rem]" />
-          </a>
-        </div>
+        {!isNative && (
+          <div className="flex justify-center">
+            <a href="https://github.com/oshriagronov/pokemmo-companion/releases/latest/download/PokeMMO.Companion.apk" className="hover:scale-105 hover:opacity-90 transition-transform block mt-2">
+              <img src="/android-download.svg" alt="Download for Android" className="h-14 sm:h-16 shadow-lg shadow-emerald-500/20 rounded-[0.85rem]" />
+            </a>
+          </div>
+        )}
       </header>
 
       {/* Main Content Layout */}
