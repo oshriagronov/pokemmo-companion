@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchPokemonData, fetchAllPokemonNames } from '../services/pokeapi';
 import { TYPE_COLORS } from '../data/types';
 
