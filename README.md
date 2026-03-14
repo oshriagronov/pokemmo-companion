@@ -21,7 +21,9 @@
 This project showcases an interactive, responsive web application built with React and TailwindCSS to act as the ultimate companion for players of the game PokeMMO. The site fetches data from PokeAPI.
 The design of the site utilizes Tailwind CSS.
 
-### Screenshots
+### Application Demo & Screenshots
+![App Demo Video](public/screenshots/app_demo.webp)
+
 ![PokeMMO Companion Type Matchups](public/screenshots/matchups.png)
 ![PokeMMO Companion Search](public/screenshots/search.png)
 
@@ -37,16 +39,30 @@ The design of the site utilizes Tailwind CSS.
 
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+### 📱 Android App Installation
 
-### Prerequisites
+To install the PokeMMO Companion directly on your Android device, simply download the latest official version using the link below:
+
+<a href="https://github.com/oshriagronov/pokemmo-companion/releases/latest/download/PokeMMO.Companion.apk">
+  <img src="./public/android-download.svg" alt="Download for Android" width="180" />
+</a>
+
+*(Note: During installation, your device may warn you that the app is from an unknown developer since it is downloaded directly from GitHub. You can safely click "Install Anyway".)*
+
+---
+
+### 💻 Local Setup
+
+To get a local copy up and running for web development or self-hosting, follow these simple steps.
+
+#### Prerequisites
 
 - Linux, MacOS or Windows
 - nodejs
 - npm
 - vite
 
-### Installation
+#### Initialization
 
 ---
 
