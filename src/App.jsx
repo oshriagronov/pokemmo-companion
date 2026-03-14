@@ -1,3 +1,4 @@
+
 import { Capacitor } from '@capacitor/core';
 import TypeMatchup from './components/TypeMatchup';
 import PokemonSearch from './components/PokemonSearch';

@@ -7,7 +7,6 @@ export async function fetchAllPokemonNames() {
     const data = await res.json();
     return data.results.map(p => p.name);
   } catch (error) {
-    console.error('Error fetching pokemon names:', error);
     return [];
   }
 }
@@ -49,13 +48,12 @@ export async function fetchPokemonData(query) {
 
     // Filter "Best Moves" heuristically (e.g. by level-up)
     const sortedLevelUpMoves = basicData.moves
-      .filter(m => m.version_group_details.some(v => v.move_learn_method.name === 'level-up'))
-      .map(m => {
+      .flatMap(m => {
         const details = m.version_group_details.find(v => v.move_learn_method.name === 'level-up');
-        return {
+        return details ? [{
           name: formatName(m.move.name),
           level: details.level_learned_at
-        };
+        }] : [];
       })
       .sort((a, b) => b.level - a.level);
 
@@ -77,7 +75,6 @@ export async function fetchPokemonData(query) {
     };
 
   } catch (error) {
-    console.error(error);
     return null;
   }
 }
