@@ -17,7 +17,7 @@ export async function fetchPokemonData(query) {
     if (!formattedQuery) return null;
 
     // 1. Fetch Basic Info & Moves
-    const basicRes = await fetch(`${BASE_URL}/pokemon/${formattedQuery}`);
+    const basicRes = await fetch(`${BASE_URL}/pokemon/${encodeURIComponent(formattedQuery)}`);
     if (!basicRes.ok) throw new Error('Pokemon not found');
     const basicData = await basicRes.json();
 
