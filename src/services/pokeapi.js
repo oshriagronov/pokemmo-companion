@@ -7,7 +7,6 @@ export async function fetchAllPokemonNames() {
     const data = await res.json();
     return data.results.map(p => p.name);
   } catch (error) {
-    console.error('Error fetching pokemon names:', error);
     return [];
   }
 }
@@ -77,7 +76,6 @@ export async function fetchPokemonData(query) {
     };
 
   } catch (error) {
-    console.error(error);
     return null;
   }
 }
