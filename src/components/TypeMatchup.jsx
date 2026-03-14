@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TYPE_COLORS, TYPE_MATCHUPS, TYPES, getOffensiveMatchups } from '../data/types';
 
 export default function TypeMatchup() {
