@@ -40,10 +40,10 @@ export async function fetchPokemonData(query) {
     let encounters = [];
     if (encRes.ok) {
       const encData = await encRes.json();
-      encounters = encData.map(e => ({
+      encounters = encData.slice(0, 5).map(e => ({
         location: formatName(e.location_area.name),
         methods: [...new Set(e.version_details.flatMap(v => v.encounter_details.map(d => d.method.name)))]
-      })).slice(0, 5); // Limit to top 5 locations
+      })); // Limit to top 5 locations
     }
 
     // Filter "Best Moves" heuristically (e.g. by level-up)
