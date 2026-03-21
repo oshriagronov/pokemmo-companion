@@ -30,7 +30,8 @@ export default function PokemonSearch() {
     setQuery(value);
     
     if (value.trim().length > 0) {
-      const filtered = allNames.filter(name => name.toLowerCase().includes(value.toLowerCase())).slice(0, 8);
+      const queryLower = value.toLowerCase();
+      const filtered = allNames.filter(name => name.toLowerCase().includes(queryLower)).slice(0, 8);
       setFilteredNames(filtered);
       setShowDropdown(true);
     } else {
