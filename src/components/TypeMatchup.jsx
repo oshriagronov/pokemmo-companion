@@ -11,19 +11,23 @@ export default function TypeMatchup() {
     if (!selectedType) return null;
     if (type === selectedType) return 'selected';
     
-    if (viewMode === 'defense') {
-      const matchup = TYPE_MATCHUPS[selectedType];
-      if (matchup.weaknesses.includes(type)) return 'def_weak'; // 2x damage taken
-      if (matchup.resistances.includes(type)) return 'resist'; // 0.5x damage taken
-      if (matchup.immunities.includes(type)) return 'immune'; // 0x damage taken
-    } else {
-      const matchup = offensiveMatchups;
-      if (matchup.superEffective.includes(type)) return 'off_strong'; // 2x damage dealt (use blue)
-      if (matchup.notVeryEffective.includes(type)) return 'resist'; // 0.5x damage dealt
-      if (matchup.noEffect.includes(type)) return 'immune'; // 0x damage dealt
-    }
+    const isDefense = viewMode === 'defense';
+    const matchup = isDefense ? TYPE_MATCHUPS[selectedType] : offensiveMatchups;
     
-    return 'neutral';
+    const conditions = isDefense
+      ? [
+          { list: matchup.weaknesses, result: 'def_weak' },
+          { list: matchup.resistances, result: 'resist' },
+          { list: matchup.immunities, result: 'immune' }
+        ]
+      : [
+          { list: matchup.superEffective, result: 'off_strong' },
+          { list: matchup.notVeryEffective, result: 'resist' },
+          { list: matchup.noEffect, result: 'immune' }
+        ];
+
+    const match = conditions.find(c => c.list.includes(type));
+    return match ? match.result : 'neutral';
   };
 
   return (
