@@ -35,30 +35,45 @@ export async function fetchPokemonData(query) {
     if (!basicRes.ok) throw new Error('Pokemon not found');
     const basicData = await basicRes.json();
 
-    // 2. Fetch Species (for flavor text and evolution chain)
-    const speciesRes = await fetch(basicData.species.url);
-    const speciesData = await speciesRes.ok ? await speciesRes.json() : null;
+    // 2. Fetch Species (for flavor text and evolution chain) and Encounters concurrently
+    const [speciesAndEvoResult, encountersResult] = await Promise.all([
+      (async () => {
+        let speciesData = null;
+        let evolutions = [];
 
-    // 3. Fetch Evolution Chain
-    let evolutions = [];
-    if (speciesData && speciesData.evolution_chain) {
-      const evoRes = await fetch(speciesData.evolution_chain.url);
-      if (evoRes.ok) {
-        const evoData = await evoRes.json();
-        evolutions = parseEvolutionChain(evoData.chain);
-      }
-    }
+        const speciesRes = await fetch(basicData.species.url);
+        speciesData = speciesRes.ok ? await speciesRes.json() : null;
 
-    // 4. Fetch Encounters
-    const encRes = await fetch(`${BASE_URL}/pokemon/${basicData.id}/encounters`);
-    let encounters = [];
-    if (encRes.ok) {
-      const encData = await encRes.json();
-      encounters = encData.slice(0, 5).map(e => ({
-        location: formatName(e.location_area.name),
-        methods: [...new Set(e.version_details.flatMap(v => v.encounter_details.map(d => d.method.name)))]
-      })); // Limit to top 5 locations
-    }
+        if (speciesData && speciesData.evolution_chain) {
+          const evoRes = await fetch(speciesData.evolution_chain.url);
+          if (evoRes.ok) {
+            const evoData = await evoRes.json();
+            evolutions = parseEvolutionChain(evoData.chain);
+          }
+        }
+
+        return { speciesData, evolutions };
+      })(),
+      (async () => {
+        let encounters = [];
+
+        const encRes = await fetch(`${BASE_URL}/pokemon/${basicData.id}/encounters`);
+        if (encRes.ok) {
+          const encData = await encRes.json();
+          encounters = encData.slice(0, 5).map(e => ({
+            location: formatName(e.location_area.name),
+            methods: [...new Set(e.version_details.flatMap(v => v.encounter_details.map(d => d.method.name)))]
+          })); // Limit to top 5 locations
+        }
+
+        return encounters;
+      })()
+    ]);
+
+    // eslint-disable-next-line no-unused-vars
+    const speciesData = speciesAndEvoResult.speciesData;
+    const evolutions = speciesAndEvoResult.evolutions;
+    const encounters = encountersResult;
 
     // Filter "Best Moves" heuristically (e.g. by level-up)
     const sortedLevelUpMoves = basicData.moves
