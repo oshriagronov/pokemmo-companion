@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert';
 import { fetchPokemonData } from './pokeapi.js';
 
-test('fetchPokemonData uses encodeURIComponent', async (t) => {
-  const originalFetch = global.fetch;
+test('fetchPokemonData uses encodeURIComponent', async () => {
+  const originalFetch = globalThis.fetch;
   let fetchUrl = '';
-  global.fetch = async (url) => {
+  globalThis.fetch = async (url) => {
     if (!fetchUrl) fetchUrl = url;
     return {
       ok: true,
@@ -43,6 +43,6 @@ test('fetchPokemonData uses encodeURIComponent', async (t) => {
       'URL should contain encoded query parameters'
     );
   } finally {
-    global.fetch = originalFetch;
+    globalThis.fetch = originalFetch;
   }
 });

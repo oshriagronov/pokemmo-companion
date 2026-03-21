@@ -1,14 +1,28 @@
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
+let cachedPokemonNamesPromise = null;
+
 export async function fetchAllPokemonNames() {
-  try {
-    const res = await fetch(`${BASE_URL}/pokemon?limit=1500`);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.results.map(p => p.name);
-  } catch (error) {
-    return [];
+  if (cachedPokemonNamesPromise) {
+    return cachedPokemonNamesPromise;
   }
+
+  cachedPokemonNamesPromise = (async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/pokemon?limit=1500`);
+      if (!res.ok) {
+        cachedPokemonNamesPromise = null;
+        return [];
+      }
+      const data = await res.json();
+      return data.results.map(p => p.name);
+    } catch {
+      cachedPokemonNamesPromise = null;
+      return [];
+    }
+  })();
+
+  return cachedPokemonNamesPromise;
 }
 
 export async function fetchPokemonData(query) {
@@ -74,7 +88,7 @@ export async function fetchPokemonData(query) {
       earlyMoves: earlyMoves.length > 0 ? earlyMoves : []
     };
 
-  } catch (error) {
+  } catch {
     return null;
   }
 }
