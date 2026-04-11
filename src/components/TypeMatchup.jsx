@@ -1,6 +1,26 @@
 import { useState, useMemo } from 'react';
 import { TYPE_COLORS, TYPE_MATCHUPS, TYPES, getOffensiveMatchups } from '../data/types';
 
+
+const MatchupList = ({ label, labelColorClass, types }) => (
+  <div className="flex items-start sm:items-center">
+    <span className={`w-12 sm:w-16 ${labelColorClass} font-bold text-right mr-3 whitespace-nowrap pt-0.5 sm:pt-0`}>
+      {label}
+    </span>
+    <div className="flex flex-wrap gap-1.5 flex-1">
+      {types.length ? (
+        types.map((t) => (
+          <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] sm:text-xs text-white font-bold uppercase`}>
+            {t}
+          </span>
+        ))
+      ) : (
+        <span className="text-slate-500 italic mt-0.5 sm:mt-0 pt-0.5 sm:pt-0">None</span>
+      )}
+    </div>
+  </div>
+);
+
 export default function TypeMatchup() {
   const [selectedType, setSelectedType] = useState(null);
   const [viewMode, setViewMode] = useState('defense');
@@ -103,38 +123,21 @@ export default function TypeMatchup() {
               {data.title}
             </h3>
             <div className="space-y-3 text-sm max-w-sm mx-auto sm:max-w-none">
-              <div className="flex items-start sm:items-center">
-                <span className="w-12 sm:w-16 text-red-400 font-bold text-right mr-3 whitespace-nowrap pt-0.5 sm:pt-0">{viewMode === 'defense' ? '-2x' : '2x'}</span>
-                <div className="flex flex-wrap gap-1.5 flex-1">
-                  {data.twoX.length ? 
-                    data.twoX.map(t => (
-                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] sm:text-xs text-white font-bold uppercase`}>{t}</span>
-                    )) : <span className="text-slate-500 italic mt-0.5 sm:mt-0 pt-0.5 sm:pt-0">None</span>
-                  }
-                </div>
-              </div>
-              
-              <div className="flex items-start sm:items-center">
-                <span className="w-12 sm:w-16 text-green-400 font-bold text-right mr-3 whitespace-nowrap pt-0.5 sm:pt-0">{viewMode === 'defense' ? '-0.5x' : '0.5x'}</span>
-                <div className="flex flex-wrap gap-1.5 flex-1">
-                  {data.halfX.length ? 
-                    data.halfX.map(t => (
-                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] sm:text-xs text-white font-bold uppercase`}>{t}</span>
-                    )) : <span className="text-slate-500 italic mt-0.5 sm:mt-0 pt-0.5 sm:pt-0">None</span>
-                  }
-                </div>
-              </div>
-
-              <div className="flex items-start sm:items-center">
-                <span className="w-12 sm:w-16 text-slate-400 font-bold text-right mr-3 pt-0.5 sm:pt-0">0x</span>
-                <div className="flex flex-wrap gap-1.5 flex-1">
-                  {data.zeroX.length ? 
-                    data.zeroX.map(t => (
-                      <span key={t} className={`${TYPE_COLORS[t]} px-2 py-0.5 rounded text-[10px] sm:text-xs text-white font-bold uppercase`}>{t}</span>
-                    )) : <span className="text-slate-500 italic mt-0.5 sm:mt-0 pt-0.5 sm:pt-0">None</span>
-                  }
-                </div>
-              </div>
+              <MatchupList
+                label={viewMode === 'defense' ? '-2x' : '2x'}
+                labelColorClass="text-red-400"
+                types={data.twoX}
+              />
+              <MatchupList
+                label={viewMode === 'defense' ? '-0.5x' : '0.5x'}
+                labelColorClass="text-green-400"
+                types={data.halfX}
+              />
+              <MatchupList
+                label="0x"
+                labelColorClass="text-slate-400"
+                types={data.zeroX}
+              />
             </div>
           </div>
         );
