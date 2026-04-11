@@ -14,7 +14,13 @@ export default function PokemonSearch() {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    fetchAllPokemonNames().then(names => setAllNames(names));
+    fetchAllPokemonNames().then(names => {
+      const optimizedNames = names.map(name => ({
+        name,
+        lower: name.toLowerCase()
+      }));
+      setAllNames(optimizedNames);
+    });
     
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -31,7 +37,10 @@ export default function PokemonSearch() {
     
     if (value.trim().length > 0) {
       const queryLower = value.toLowerCase();
-      const filtered = allNames.filter(name => name.toLowerCase().includes(queryLower)).slice(0, 8);
+      const filtered = allNames
+        .filter(item => item.lower.includes(queryLower))
+        .slice(0, 8)
+        .map(item => item.name);
       setFilteredNames(filtered);
       setShowDropdown(true);
     } else {
