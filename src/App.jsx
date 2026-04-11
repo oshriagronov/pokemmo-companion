@@ -44,7 +44,7 @@ function App() {
       {/* Footer */}
       <footer className="mt-12 text-center text-slate-500 text-xs md:text-sm py-6 md:py-8 border-t border-slate-800/80">
         <p>
-          I would like to thank <a href="https://pokeapi.co/" className="text-blue-400 hover:text-blue-300 font-medium transition-colors" target="_blank" rel="noreferrer">PokeAPI</a> for providing the data. Built with <span className="text-emerald-400 font-bold tracking-wide">Google Antigravity</span> for the PokeMMO community.
+          I would like to thank <a href="https://pokeapi.co/" className="text-blue-400 hover:text-blue-300 font-medium transition-colors" target="_blank" rel="noopener noreferrer">PokeAPI</a> for providing the data. Built with <span className="text-emerald-400 font-bold tracking-wide">Google Antigravity</span> for the PokeMMO community.
         </p>
       </footer>
     </div>
