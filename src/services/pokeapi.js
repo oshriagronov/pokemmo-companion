@@ -35,30 +35,39 @@ export async function fetchPokemonData(query) {
     if (!basicRes.ok) throw new Error('Pokemon not found');
     const basicData = await basicRes.json();
 
-    // 2. Fetch Species (for flavor text and evolution chain)
-    const speciesRes = await fetch(basicData.species.url);
-    const speciesData = await speciesRes.ok ? await speciesRes.json() : null;
+    // 2 & 3. Fetch Species (for evolution chain) and Encounters concurrently
+    const speciesPromise = fetch(basicData.species.url)
+      .then(res => res.ok ? res.json() : null)
+      .then(async speciesData => {
+        if (speciesData && speciesData.evolution_chain) {
+          const evoRes = await fetch(speciesData.evolution_chain.url);
+          if (evoRes.ok) {
+            const evoData = await evoRes.json();
+            return parseEvolutionChain(evoData.chain);
+          }
+        }
+        return [];
+      })
+      .catch(err => {
+        console.error(err);
+        return [];
+      });
 
-    // 3. Fetch Evolution Chain
-    let evolutions = [];
-    if (speciesData && speciesData.evolution_chain) {
-      const evoRes = await fetch(speciesData.evolution_chain.url);
-      if (evoRes.ok) {
-        const evoData = await evoRes.json();
-        evolutions = parseEvolutionChain(evoData.chain);
-      }
-    }
+    const encountersPromise = fetch(`${BASE_URL}/pokemon/${basicData.id}/encounters`)
+      .then(res => res.ok ? res.json() : [])
+      .then(encData => {
+        if (!Array.isArray(encData)) return [];
+        return encData.slice(0, 5).map(e => ({
+          location: formatName(e.location_area.name),
+          methods: [...new Set(e.version_details.flatMap(v => v.encounter_details.map(d => d.method.name)))]
+        })); // Limit to top 5 locations
+      })
+      .catch(err => {
+        console.error(err);
+        return [];
+      });
 
-    // 4. Fetch Encounters
-    const encRes = await fetch(`${BASE_URL}/pokemon/${basicData.id}/encounters`);
-    let encounters = [];
-    if (encRes.ok) {
-      const encData = await encRes.json();
-      encounters = encData.slice(0, 5).map(e => ({
-        location: formatName(e.location_area.name),
-        methods: [...new Set(e.version_details.flatMap(v => v.encounter_details.map(d => d.method.name)))]
-      })); // Limit to top 5 locations
-    }
+    const [evolutions, encounters] = await Promise.all([speciesPromise, encountersPromise]);
 
     // Filter "Best Moves" heuristically (e.g. by level-up)
     const sortedLevelUpMoves = basicData.moves
