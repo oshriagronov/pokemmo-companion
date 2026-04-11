@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { fetchPokemonData, fetchAllPokemonNames } from '../services/pokeapi';
 import { TYPE_COLORS } from '../data/types';
+import { MoveList } from './MoveList';
 
 export default function PokemonSearch() {
   const [query, setQuery] = useState('');
@@ -195,31 +196,20 @@ export default function PokemonSearch() {
 
             {/* Best & Early Moves */}
             <div className="md:col-span-2 space-y-4">
-              <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
-                <h4 className="font-bold text-purple-400 mb-3 border-b border-slate-700 pb-2">Notable Late-Game Moves</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {pokemon.bestMoves.map((m, i) => (
-                    <div key={i} className="bg-slate-800 p-2 rounded flex flex-col items-center justify-center text-center">
-                      <span className="text-white font-bold text-sm capitalize">{m.name.replace('-', ' ')}</span>
-                      <span className="text-xs text-purple-300 mt-1">Learned at Lv. {m.level}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <MoveList
+                title="Notable Late-Game Moves"
+                moves={pokemon.bestMoves}
+                titleColor="text-purple-400"
+                levelColor="text-purple-300"
+              />
 
-              {pokemon.earlyMoves.length > 0 && (
-                <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
-                  <h4 className="font-bold text-blue-400 mb-3 border-b border-slate-700 pb-2">Honorable Mentions (Early/Mid Game)</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {pokemon.earlyMoves.map((m, i) => (
-                      <div key={i} className="bg-slate-800 p-2 rounded flex flex-col items-center justify-center text-center opacity-80 hover:opacity-100 transition-opacity">
-                        <span className="text-white font-bold text-sm capitalize">{m.name.replace('-', ' ')}</span>
-                        <span className="text-xs text-blue-300 mt-1">Learned at Lv. {m.level}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <MoveList
+                title="Honorable Mentions (Early/Mid Game)"
+                moves={pokemon.earlyMoves}
+                titleColor="text-blue-400"
+                levelColor="text-blue-300"
+                itemClass="opacity-80 hover:opacity-100 transition-opacity"
+              />
             </div>
 
           </div>
