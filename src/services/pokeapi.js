@@ -1,6 +1,7 @@
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
 let cachedPokemonNamesPromise = null;
+const pokemonDataCache = new Map();
 
 export async function fetchAllPokemonNames() {
   if (cachedPokemonNamesPromise) {
@@ -26,86 +27,97 @@ export async function fetchAllPokemonNames() {
 }
 
 export async function fetchPokemonData(query) {
-  try {
-    const formattedQuery = query.toLowerCase().trim();
-    if (!formattedQuery) return null;
+  const formattedQuery = (typeof query === 'string' ? query : String(query)).toLowerCase().trim();
+  if (!formattedQuery) return null;
 
-    // 1. Fetch Basic Info & Moves
-    const basicRes = await fetch(`${BASE_URL}/pokemon/${encodeURIComponent(formattedQuery)}`);
-    if (!basicRes.ok) throw new Error('Pokemon not found');
-    const basicData = await basicRes.json();
-
-    // 2. Fetch Species (for flavor text and evolution chain) and Encounters concurrently
-    const [speciesAndEvoResult, encountersResult] = await Promise.all([
-      (async () => {
-        let speciesData = null;
-        let evolutions = [];
-
-        const speciesRes = await fetch(basicData.species.url);
-        speciesData = speciesRes.ok ? await speciesRes.json() : null;
-
-        if (speciesData && speciesData.evolution_chain) {
-          const evoRes = await fetch(speciesData.evolution_chain.url);
-          if (evoRes.ok) {
-            const evoData = await evoRes.json();
-            evolutions = parseEvolutionChain(evoData.chain);
-          }
-        }
-
-        return { speciesData, evolutions };
-      })(),
-      (async () => {
-        let encounters = [];
-
-        const encRes = await fetch(`${BASE_URL}/pokemon/${basicData.id}/encounters`);
-        if (encRes.ok) {
-          const encData = await encRes.json();
-          encounters = encData.slice(0, 5).map(e => ({
-            location: formatName(e.location_area.name),
-            methods: [...new Set(e.version_details.flatMap(v => v.encounter_details.map(d => d.method.name)))]
-          })); // Limit to top 5 locations
-        }
-
-        return encounters;
-      })()
-    ]);
-
-    // eslint-disable-next-line no-unused-vars
-    const speciesData = speciesAndEvoResult.speciesData;
-    const evolutions = speciesAndEvoResult.evolutions;
-    const encounters = encountersResult;
-
-    // Filter "Best Moves" heuristically (e.g. by level-up)
-    const sortedLevelUpMoves = basicData.moves
-      .flatMap(m => {
-        const details = m.version_group_details.find(v => v.move_learn_method.name === 'level-up');
-        return details ? [{
-          name: formatName(m.move.name),
-          level: details.level_learned_at
-        }] : [];
-      })
-      .sort((a, b) => b.level - a.level);
-
-    const bestMoves = sortedLevelUpMoves.slice(0, 4);
-    const earlyMoves = sortedLevelUpMoves.slice(4, 8); // The moves learned right before the best moves
-
-    return {
-      id: basicData.id,
-      name: formatName(basicData.name),
-      sprites: {
-        front: basicData.sprites.other['official-artwork'].front_default || basicData.sprites.front_default
-      },
-      types: basicData.types.map(t => t.type.name),
-      stats: basicData.stats.map(s => ({ name: formatName(s.stat.name), value: s.base_stat })),
-      evolutions,
-      encounters,
-      bestMoves: bestMoves.length > 0 ? bestMoves : basicData.moves.slice(0, 4).map(m => ({ name: formatName(m.move.name), level: '?' })),
-      earlyMoves: earlyMoves.length > 0 ? earlyMoves : []
-    };
-
-  } catch {
-    return null;
+  if (pokemonDataCache.has(formattedQuery)) {
+    return pokemonDataCache.get(formattedQuery);
   }
+
+  const promise = (async () => {
+    try {
+      // 1. Fetch Basic Info & Moves
+      const basicRes = await fetch(`${BASE_URL}/pokemon/${encodeURIComponent(formattedQuery)}`);
+      if (!basicRes.ok) throw new Error('Pokemon not found');
+      const basicData = await basicRes.json();
+
+      // 2. Fetch Species (for flavor text and evolution chain) and Encounters concurrently
+      const [speciesAndEvoResult, encountersResult] = await Promise.all([
+        (async () => {
+          let speciesData = null;
+          let evolutions = [];
+
+          const speciesRes = await fetch(basicData.species.url);
+          speciesData = speciesRes.ok ? await speciesRes.json() : null;
+
+          if (speciesData && speciesData.evolution_chain) {
+            const evoRes = await fetch(speciesData.evolution_chain.url);
+            if (evoRes.ok) {
+              const evoData = await evoRes.json();
+              evolutions = parseEvolutionChain(evoData.chain);
+            }
+          }
+
+          return { speciesData, evolutions };
+        })(),
+        (async () => {
+          let encounters = [];
+
+          const encRes = await fetch(`${BASE_URL}/pokemon/${basicData.id}/encounters`);
+          if (encRes.ok) {
+            const encData = await encRes.json();
+            encounters = encData.slice(0, 5).map(e => ({
+              location: formatName(e.location_area.name),
+              methods: [...new Set(e.version_details.flatMap(v => v.encounter_details.map(d => d.method.name)))]
+            })); // Limit to top 5 locations
+          }
+
+          return encounters;
+        })()
+      ]);
+
+      // eslint-disable-next-line no-unused-vars
+      const speciesData = speciesAndEvoResult.speciesData;
+      const evolutions = speciesAndEvoResult.evolutions;
+      const encounters = encountersResult;
+
+      // Filter "Best Moves" heuristically (e.g. by level-up)
+      const sortedLevelUpMoves = basicData.moves
+        .flatMap(m => {
+          const details = m.version_group_details.find(v => v.move_learn_method.name === 'level-up');
+          return details ? [{
+            name: formatName(m.move.name),
+            level: details.level_learned_at
+          }] : [];
+        })
+        .sort((a, b) => b.level - a.level);
+
+      const bestMoves = sortedLevelUpMoves.slice(0, 4);
+      const earlyMoves = sortedLevelUpMoves.slice(4, 8); // The moves learned right before the best moves
+
+      return {
+        id: basicData.id,
+        name: formatName(basicData.name),
+        sprites: {
+          front: basicData.sprites.other['official-artwork'].front_default || basicData.sprites.front_default
+        },
+        types: basicData.types.map(t => t.type.name),
+        stats: basicData.stats.map(s => ({ name: formatName(s.stat.name), value: s.base_stat })),
+        evolutions,
+        encounters,
+        bestMoves: bestMoves.length > 0 ? bestMoves : basicData.moves.slice(0, 4).map(m => ({ name: formatName(m.move.name), level: '?' })),
+        earlyMoves: earlyMoves.length > 0 ? earlyMoves : []
+      };
+
+    } catch (err) {
+
+      pokemonDataCache.delete(formattedQuery);
+      return null;
+    }
+  })();
+
+  pokemonDataCache.set(formattedQuery, promise);
+  return promise;
 }
 
 function parseEvolutionChain(chainNode) {
