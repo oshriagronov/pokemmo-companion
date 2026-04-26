@@ -27,14 +27,13 @@ export default function TypeMatchup() {
 
   const offensiveMatchups = useMemo(() => selectedType ? getOffensiveMatchups(selectedType) : null, [selectedType]);
 
-  const getMatchType = (type) => {
-    if (!selectedType) return null;
-    if (type === selectedType) return 'selected';
+  const matchupConditions = useMemo(() => {
+    if (!selectedType) return [];
     
     const isDefense = viewMode === 'defense';
     const matchup = isDefense ? TYPE_MATCHUPS[selectedType] : offensiveMatchups;
     
-    const conditions = isDefense
+    return isDefense
       ? [
           { list: matchup.weaknesses, result: 'def_weak' },
           { list: matchup.resistances, result: 'resist' },
@@ -45,8 +44,13 @@ export default function TypeMatchup() {
           { list: matchup.notVeryEffective, result: 'resist' },
           { list: matchup.noEffect, result: 'immune' }
         ];
+  }, [selectedType, viewMode, offensiveMatchups]);
 
-    const match = conditions.find(c => c.list.includes(type));
+  const getMatchType = (type) => {
+    if (!selectedType) return null;
+    if (type === selectedType) return 'selected';
+
+    const match = matchupConditions.find(c => c.list.includes(type));
     return match ? match.result : 'neutral';
   };
 
