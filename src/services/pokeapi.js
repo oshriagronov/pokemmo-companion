@@ -2,6 +2,7 @@ const BASE_URL = 'https://pokeapi.co/api/v2';
 
 let cachedPokemonNamesPromise = null;
 const pokemonDataCache = new Map();
+const CACHE_LIMIT = 100;
 
 export async function fetchAllPokemonNames() {
   if (cachedPokemonNamesPromise) {
@@ -31,7 +32,11 @@ export async function fetchPokemonData(query) {
   if (!formattedQuery) return null;
 
   if (pokemonDataCache.has(formattedQuery)) {
-    return pokemonDataCache.get(formattedQuery);
+    const cachedPromise = pokemonDataCache.get(formattedQuery);
+    // Move to the end to maintain LRU order
+    pokemonDataCache.delete(formattedQuery);
+    pokemonDataCache.set(formattedQuery, cachedPromise);
+    return cachedPromise;
   }
 
   const promise = (async () => {
@@ -117,6 +122,13 @@ export async function fetchPokemonData(query) {
   })();
 
   pokemonDataCache.set(formattedQuery, promise);
+
+  // Enforce cache limit
+  if (pokemonDataCache.size > CACHE_LIMIT) {
+    const firstKey = pokemonDataCache.keys().next().value;
+    pokemonDataCache.delete(firstKey);
+  }
+
   return promise;
 }
 
