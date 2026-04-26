@@ -42,13 +42,12 @@ export async function fetchPokemonData(query) {
       const basicData = await basicRes.json();
 
       // 2. Fetch Species (for flavor text and evolution chain) and Encounters concurrently
-      const [speciesAndEvoResult, encountersResult] = await Promise.all([
+      const [{ evolutions }, encounters] = await Promise.all([
         (async () => {
-          let speciesData = null;
           let evolutions = [];
 
           const speciesRes = await fetch(basicData.species.url);
-          speciesData = speciesRes.ok ? await speciesRes.json() : null;
+          const speciesData = speciesRes.ok ? await speciesRes.json() : null;
 
           if (speciesData && speciesData.evolution_chain) {
             const evoRes = await fetch(speciesData.evolution_chain.url);
@@ -58,7 +57,7 @@ export async function fetchPokemonData(query) {
             }
           }
 
-          return { speciesData, evolutions };
+          return { evolutions };
         })(),
         (async () => {
           let encounters = [];
@@ -75,11 +74,6 @@ export async function fetchPokemonData(query) {
           return encounters;
         })()
       ]);
-
-      // eslint-disable-next-line no-unused-vars
-      const speciesData = speciesAndEvoResult.speciesData;
-      const evolutions = speciesAndEvoResult.evolutions;
-      const encounters = encountersResult;
 
       // Filter "Best Moves" heuristically (e.g. by level-up)
       const sortedLevelUpMoves = basicData.moves
