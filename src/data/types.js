@@ -43,8 +43,9 @@ export const TYPE_MATCHUPS = {
 
 export const TYPES = Object.keys(TYPE_MATCHUPS);
 
-// Helper function to calculate offensive advantages based on the defender matrix
-export const getOffensiveMatchups = (attacker) => {
+// Precompute offensive matchups cache
+const OFFENSIVE_MATCHUPS_CACHE = {};
+for (const attacker of TYPES) {
   const superEffective = [];
   const notVeryEffective = [];
   const noEffect = [];
@@ -55,5 +56,10 @@ export const getOffensiveMatchups = (attacker) => {
     if (matchup.immunities.includes(attacker)) noEffect.push(defender);
   }
 
-  return { superEffective, notVeryEffective, noEffect };
+  OFFENSIVE_MATCHUPS_CACHE[attacker] = { superEffective, notVeryEffective, noEffect };
+}
+
+// Helper function to calculate offensive advantages based on the defender matrix
+export const getOffensiveMatchups = (attacker) => {
+  return OFFENSIVE_MATCHUPS_CACHE[attacker] || { superEffective: [], notVeryEffective: [], noEffect: [] };
 };
