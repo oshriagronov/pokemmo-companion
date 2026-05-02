@@ -82,13 +82,16 @@ export async function fetchPokemonData(query) {
 
       // Filter "Best Moves" heuristically (e.g. by level-up)
       const sortedLevelUpMoves = basicData.moves
-        .flatMap(m => {
+        .reduce((acc, m) => {
           const details = m.version_group_details.find(v => v.move_learn_method.name === 'level-up');
-          return details ? [{
-            name: formatName(m.move.name),
-            level: details.level_learned_at
-          }] : [];
-        })
+          if (details) {
+            acc.push({
+              name: formatName(m.move.name),
+              level: details.level_learned_at
+            });
+          }
+          return acc;
+        }, [])
         .sort((a, b) => b.level - a.level);
 
       const bestMoves = sortedLevelUpMoves.slice(0, 4);
