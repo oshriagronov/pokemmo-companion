@@ -89,6 +89,7 @@ export default function PokemonSearch() {
       <form onSubmit={handleSearch} className="relative mb-6" ref={dropdownRef}>
         <input 
           type="text" 
+          maxLength={50}
           value={query}
           onChange={handleInputChange}
           onFocus={() => { if (filteredNames.length > 0) setShowDropdown(true); }}
