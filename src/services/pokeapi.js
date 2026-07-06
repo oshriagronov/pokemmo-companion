@@ -130,9 +130,9 @@ export async function fetchPokemonData(query) {
 }
 
 function parseEvolutionChain(chainNode) {
-  const evos = [];
+  const paths = [];
 
-  const traverse = (node) => {
+  const traverse = (node, currentPath) => {
     const speciesName = formatName(node.species.name);
     let requirement = '';
 
@@ -145,20 +145,17 @@ function parseEvolutionChain(chainNode) {
       else requirement = 'Special';
     }
 
-    evos.push({
-      species: speciesName,
-      requirement
-    });
+    const newPath = [...currentPath, { species: speciesName, requirement }];
 
     if (node.evolves_to.length > 0) {
-      // Just following the first branch for simplicity in this demo if there are multiple (like Eevee), 
-      // but we could map all branches. We will map all immediate branches.
-      node.evolves_to.forEach(child => traverse(child));
+      node.evolves_to.forEach(child => traverse(child, newPath));
+    } else {
+      paths.push(newPath);
     }
   };
 
-  traverse(chainNode);
-  return evos;
+  traverse(chainNode, []);
+  return paths;
 }
 
 function formatName(str) {

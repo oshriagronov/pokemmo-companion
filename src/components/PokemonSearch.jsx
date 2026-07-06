@@ -169,18 +169,25 @@ export default function PokemonSearch() {
             {/* Evolutions */}
             <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
               <h4 className="font-bold text-emerald-400 mb-3 border-b border-slate-700 pb-2">Evolution Chain</h4>
-              {pokemon.evolutions.length > 0 ? (
-                <div className="space-y-3">
-                  {pokemon.evolutions.map((evo, i) => (
-                    <div key={i} className="flex items-center text-sm">
-                      <span className={`font-bold ${evo.species === pokemon.name ? 'text-white' : 'text-slate-300'}`}>
-                        {evo.species}
-                      </span>
-                      {evo.requirement && (
-                        <span className="ml-auto text-xs bg-slate-800 px-2 py-1 rounded text-emerald-300 border border-emerald-900/50">
-                          {evo.requirement}
-                        </span>
-                      )}
+              {pokemon.evolutions.length > 0 && pokemon.evolutions[0].length > 1 ? (
+                <div className="space-y-4">
+                  {pokemon.evolutions.map((branch, branchIdx) => (
+                    <div key={branchIdx} className="space-y-2 border-b border-slate-700/50 pb-3 last:border-0 last:pb-0">
+                      {branch.map((evo, i) => (
+                        <div key={i} className="flex items-center text-sm">
+                          <div className="flex items-center">
+                            {i > 0 && <span className="text-slate-500 mr-2">↳</span>}
+                            <span className={`font-bold ${evo.species === pokemon.name ? 'text-white' : 'text-slate-300'}`}>
+                              {evo.species}
+                            </span>
+                          </div>
+                          {evo.requirement && (
+                            <span className="ml-auto text-xs bg-slate-800 px-2 py-1 rounded text-emerald-300 border border-emerald-900/50 whitespace-nowrap">
+                              {evo.requirement}
+                            </span>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
