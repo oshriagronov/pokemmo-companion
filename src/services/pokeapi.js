@@ -86,7 +86,7 @@ export async function fetchPokemonData(query) {
           const details = m.version_group_details.find(v => v.move_learn_method.name === 'level-up');
           if (details) {
             acc.push({
-              name: formatName(m.move.name),
+              name: m.move.name,
               level: details.level_learned_at
             });
           }
@@ -94,8 +94,8 @@ export async function fetchPokemonData(query) {
         }, [])
         .sort((a, b) => b.level - a.level);
 
-      const bestMoves = sortedLevelUpMoves.slice(0, 4);
-      const earlyMoves = sortedLevelUpMoves.slice(4, 8); // The moves learned right before the best moves
+      const bestMoves = sortedLevelUpMoves.slice(0, 4).map(m => ({ ...m, name: formatName(m.name) }));
+      const earlyMoves = sortedLevelUpMoves.slice(4, 8).map(m => ({ ...m, name: formatName(m.name) })); // The moves learned right before the best moves
 
       return {
         id: basicData.id,
@@ -111,7 +111,7 @@ export async function fetchPokemonData(query) {
         earlyMoves: earlyMoves.length > 0 ? earlyMoves : []
       };
 
-    } catch (err) {
+    } catch {
 
       pokemonDataCache.delete(formattedQuery);
       return null;
