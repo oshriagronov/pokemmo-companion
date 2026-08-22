@@ -112,6 +112,7 @@ export async function fetchPokemonData(query) {
       };
 
     } catch (err) {
+      console.error(err);
 
       pokemonDataCache.delete(formattedQuery);
       return null;
