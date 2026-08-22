@@ -58,8 +58,9 @@ export default function TypeMatchup() {
   const getMatchType = (type) => {
     if (!selectedType) return null;
     if (type === selectedType) return 'selected';
+    if (matchupMap[type]) return matchupMap[type];
 
-    return matchupMap[type] || 'neutral';
+    return 'neutral';
   };
 
   return (
