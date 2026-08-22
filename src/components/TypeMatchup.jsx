@@ -25,13 +25,11 @@ export default function TypeMatchup() {
   const [selectedType, setSelectedType] = useState(null);
   const [viewMode, setViewMode] = useState('defense');
 
-  const offensiveMatchups = useMemo(() => selectedType ? getOffensiveMatchups(selectedType) : null, [selectedType]);
-
   const matchupMap = useMemo(() => {
     if (!selectedType) return {};
     
     const isDefense = viewMode === 'defense';
-    const matchup = isDefense ? TYPE_MATCHUPS[selectedType] : offensiveMatchups;
+    const matchup = isDefense ? TYPE_MATCHUPS[selectedType] : getOffensiveMatchups(selectedType);
     
     const conditions = isDefense
       ? [
@@ -53,7 +51,7 @@ export default function TypeMatchup() {
       }
     }
     return map;
-  }, [selectedType, viewMode, offensiveMatchups]);
+  }, [selectedType, viewMode]);
 
   const getMatchType = (type) => {
     if (!selectedType) return null;
@@ -120,18 +118,19 @@ export default function TypeMatchup() {
       </div>
 
       {selectedType && (() => {
+        const matchup = viewMode === 'defense' ? TYPE_MATCHUPS[selectedType] : getOffensiveMatchups(selectedType);
         const data = viewMode === 'defense' 
           ? {
               title: `${selectedType} Defenses`,
-              twoX: TYPE_MATCHUPS[selectedType].weaknesses,
-              halfX: TYPE_MATCHUPS[selectedType].resistances,
-              zeroX: TYPE_MATCHUPS[selectedType].immunities
+              twoX: matchup.weaknesses,
+              halfX: matchup.resistances,
+              zeroX: matchup.immunities
             }
           : {
               title: `${selectedType} Attacks`,
-              twoX: offensiveMatchups.superEffective,
-              halfX: offensiveMatchups.notVeryEffective,
-              zeroX: offensiveMatchups.noEffect
+              twoX: matchup.superEffective,
+              halfX: matchup.notVeryEffective,
+              zeroX: matchup.noEffect
             };
 
         return (
