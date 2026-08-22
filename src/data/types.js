@@ -45,12 +45,13 @@ export const TYPES = Object.keys(TYPE_MATCHUPS);
 
 // Precompute offensive matchups cache
 const OFFENSIVE_MATCHUPS_CACHE = {};
+const typeMatchupsEntries = Object.entries(TYPE_MATCHUPS);
 for (const attacker of TYPES) {
   const superEffective = [];
   const notVeryEffective = [];
   const noEffect = [];
 
-  for (const [defender, matchup] of Object.entries(TYPE_MATCHUPS)) {
+  for (const [defender, matchup] of typeMatchupsEntries) {
     if (matchup.weaknesses.includes(attacker)) superEffective.push(defender);
     if (matchup.resistances.includes(attacker)) notVeryEffective.push(defender);
     if (matchup.immunities.includes(attacker)) noEffect.push(defender);
