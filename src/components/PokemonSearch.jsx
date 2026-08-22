@@ -38,13 +38,10 @@ export default function PokemonSearch() {
     
     if (value.trim().length > 0) {
       const queryLower = value.toLowerCase();
-      const filtered = [];
-      for (let i = 0; i < allNames.length; i++) {
-        if (allNames[i].lower.includes(queryLower)) {
-          filtered.push(allNames[i].name);
-          if (filtered.length >= 8) break;
-        }
-      }
+      const filtered = allNames
+        .filter(nameObj => nameObj.lower.includes(queryLower))
+        .slice(0, 8)
+        .map(nameObj => nameObj.name);
       setFilteredNames(filtered);
       setShowDropdown(true);
     } else {
